@@ -1,3 +1,6 @@
+const config = require('config')
+const startupDebugger = require('debug')('app:startup');
+const dbDebugger = require('debug')('app:debug')
 const middleWare = require('./logger')
 const Joi = require('joi');
 const express = require('express');
@@ -16,13 +19,16 @@ app.use((req, res, next)=>{
     next()
 })
 const env = process.env.NODE_ENV // undefined
-// console.log(`Node Environment is ${app.get('env')}`)
-// console.log(`Node env ${env}`)
-if(app.get('env')=== 'production'){
+// configuration 
+console.log('Application: '+ config.get('name'))
+console.log('Mail server: '+ config.get('mail.host'));
+console.log('Mail password: '+ config.get('mail.password'))
+if(app.get('env')=== 'development'){
     app.use(morgan('tiny'));
-    console.log('enabled morgan')
+    startupDebugger('enabled morganssss');
 }
 
+dbDebugger('database connected');
 
 app.use(middleWare);
 app.use(express.urlencoded({extended: true}));
